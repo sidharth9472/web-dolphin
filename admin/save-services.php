@@ -1,0 +1,118 @@
+<?php
+    $target_dir = "upload/services/";
+    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+    // Check if image file is a actual image or fake image
+    if(isset($_POST["submit"])) {
+      include "config.php";
+      $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+      if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+      } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+      }
+    }
+
+      // Check if file already exists
+      if (file_exists($target_file)) {
+        echo "Sorry, file already exists.";
+        $uploadOk = 0;
+      }
+
+    // Check file size
+    if ($_FILES["fileToUpload"]["size"] > 500000) {
+      echo "Sorry, your file is too large.";
+      $uploadOk = 0;
+    }
+
+    // Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+    && $imageFileType != "gif" ) {
+      echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+      $uploadOk = 0;
+    }
+
+    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+      echo "Sorry, your file was not uploaded.";
+    // if everything is ok, try to upload file
+    } else {
+      if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+        echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
+      } else {
+        echo "Sorry, there was an error uploading your file.";
+      }
+    }
+
+    /// For 2nd File -->
+
+      $target_dir = "upload/services/";
+    $target_file1 = $target_dir . basename($_FILES["fileToUpload1"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+    // Check if image file is a actual image or fake image
+    
+      $check = getimagesize($_FILES["fileToUpload1"]["tmp_name"]);
+      if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+      } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+      }
+ 
+
+      // Check if file already exists
+      if (file_exists($target_file1)) {
+        echo "Sorry, file already exists.";
+        $uploadOk = 0;
+      }
+
+    // Check file size
+    if ($_FILES["fileToUpload1"]["size"] > 500000) {
+      echo "Sorry, your file is too large.";
+      $uploadOk = 0;
+    }
+
+    // Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+    && $imageFileType != "gif" ) {
+      echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+      $uploadOk = 0;
+    }
+
+    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+      echo "Sorry, your file was not uploaded.";
+    // if everything is ok, try to upload file
+    } else {
+      if (move_uploaded_file($_FILES["fileToUpload1"]["tmp_name"], $target_file1)) {
+        echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload1"]["name"])). " has been uploaded.";
+      } else {
+        echo "Sorry, there was an error uploading your file.";
+      }
+    }
+
+
+   
+  $service_heading = mysqli_real_escape_string($conn, $_POST['service_heading']);
+  $service_title = mysqli_real_escape_string($conn, $_POST['service_title']);
+ 
+  $service_desc = mysqli_real_escape_string($conn, $_POST['service_desc']);
+
+
+  $sql = "INSERT INTO `services`(`heading`, `title`, `description`, `image_1`,`image_2`) VALUES ('{$service_heading}','{$service_title}','{$service_desc}','{$target_file}','{$target_file1}')";
+   
+  if(mysqli_query($conn, $sql)){
+    header("location: {$hostname}/admin/services.php");
+  }else{
+     echo "<div class='alert alert-danger'>Query Failed.</div>";
+  }
+
+
+?>
